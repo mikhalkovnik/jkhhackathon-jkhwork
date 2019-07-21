@@ -286,4 +286,5 @@
     <string name="messagetext3">сообщение</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="map">Карта</string>
+    <string name="lazybones_homeserve">Lazybones Homeserve</string>
 </resources>

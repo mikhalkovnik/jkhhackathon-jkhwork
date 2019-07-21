@@ -8,7 +8,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,11 +17,22 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import com.here.android.mpa.common.GeoCoordinate;
 import com.here.android.mpa.common.OnEngineInitListener;
+import com.here.android.mpa.common.ViewObject;
 import com.here.android.mpa.mapping.Map;
+import com.here.android.mpa.mapping.MapGesture;
+
+
+import com.here.android.mpa.mapping.MapMarker;
+
+import com.here.android.mpa.mapping.MapObject;
 import com.here.android.mpa.mapping.SupportMapFragment;
 
 
@@ -32,18 +42,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static ru.lazybones.jkh.jkhwork.Current.preOrders;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Map map = null;
     private DatabaseReference mydatabase;
+    private ProgressBar progressBar;
+    private ArrayList<Buildingscity> buildings;
+    private ArrayList<PreOrder> preOrders;
+
 
     // map fragment embedded in this activity
     private SupportMapFragment mapFragment = null;
@@ -141,10 +159,11 @@ public class MapActivity extends AppCompatActivity
                         // retrieve a reference of the map from the map fragment
                         map = mapFragment.getMap();
                         // Set the map center to the Vancouver region (no animation)
-                        map.setCenter(new GeoCoordinate(49.196261, -123.004773, 0.0),
+                        map.setCenter(new GeoCoordinate(56.296119, 43.978929, 0.0),
                                 Map.Animation.NONE);
                         // Set the zoom level to the average between min and max
-                        map.setZoomLevel((map.getMaxZoomLevel() + map.getMinZoomLevel()) / 2);
+                        map.setZoomLevel((map.getMaxZoomLevel() + map.getMinZoomLevel()) / 2+5);
+                        updatedb();
                     } else {
                         System.out.println("ERROR: Cannot initialize Map Fragment");
                     }
@@ -152,14 +171,137 @@ public class MapActivity extends AppCompatActivity
             });
         }
 
-        updatedb();
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+
     }
 
     private void updatedb() {
 
-        mydatabase.child("objects").
+        mydatabase.child("objects").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
+                buildings = new ArrayList<>();
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot snapshot1 :
+                            dataSnapshot.getChildren()) {
+
+                        Buildingscity element = snapshot1.getValue(Buildingscity.class);
+                        if (element!= null)
+
+                            buildings.add(element);
 
 
+                    }
+
+                }
+                progressBar.setVisibility(View.GONE);
+
+                updatevepreorders();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void updatevepreorders() {
+
+        mydatabase.child("preorders").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
+                preOrders = new ArrayList<>();
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot snapshot1 :
+                            dataSnapshot.getChildren()) {
+                        for (DataSnapshot snapshot2 :
+                                snapshot1.getChildren()) {
+
+                            PreOrder element = snapshot2.getValue(PreOrder.class);
+                            if (element != null)
+
+                                preOrders.add(element);
+                        }
+
+
+                    }
+
+                }
+                progressBar.setVisibility(View.GONE);
+
+                updatemap();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void updatemap() {
+
+        for (PreOrder order: preOrders) {
+            double lat=0.0;
+            double lng=0.0;
+            String orderbuildid= order.getObjectid();
+         for (Buildingscity bcity: buildings) {
+             String buildid = (String) bcity.getId() + "";
+
+             if (buildid.equals(orderbuildid)) {
+                 lat = bcity.getLat();
+                 lng = bcity.getLng();
+             }
+         }
+// Create a custom marker image
+             com.here.android.mpa.common.Image myImage =
+                     new com.here.android.mpa.common.Image();
+
+             try {
+                 myImage.setImageResource(R.drawable.infoicsmall);
+             } catch (IOException e) {
+                 finish();
+             }
+// Create the MapMarker
+             MapMarker myMapMarker =   new MapMarker(new GeoCoordinate(lat, lng), myImage);
+             map.addMapObject(myMapMarker);
+// Create a gesture listener and add it to the SupportMapFragment
+             MapGesture.OnGestureListener listener =
+                     new MapGesture.OnGestureListener.OnGestureListenerAdapter() {
+                         @Override
+                         public boolean onMapObjectsSelected(List<ViewObject> objects) {
+                             for (ViewObject viewObj : objects) {
+                                 if (viewObj.getBaseType() == ViewObject.Type.USER_OBJECT) {
+                                     if (((MapObject)viewObj).getType() == MapObject.Type.MARKER) {
+                                         // At this point we have the originally added
+                                         // map marker, so we can do something with it
+                                         // (like change the visibility, or more
+                                         // marker-specific actions)
+                                         ((MapObject)viewObj).setVisible(false);
+                                     }
+                                 }
+                             }
+                             // return false to allow the map to handle this callback also
+                             return false;
+                         }
+
+                     };
+         }
     }
 
 

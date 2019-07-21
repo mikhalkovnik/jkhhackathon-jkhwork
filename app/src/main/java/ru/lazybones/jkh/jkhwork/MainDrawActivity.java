@@ -126,10 +126,7 @@ public class MainDrawActivity extends AppCompatActivity
                         if (element!= null)
 
                             preOrders.add(element);
-
-
                     }
-
                 }
                 progressBar.setVisibility(View.GONE);
                 Current.preOrders=preOrders;
