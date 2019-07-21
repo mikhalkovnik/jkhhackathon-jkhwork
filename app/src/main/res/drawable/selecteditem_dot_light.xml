@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- <?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"android:shape="oval"android:useLevel="true"android:dither="true"><sizeandroid:height="12dip"android:width="12dip"/><solidandroid:color="#dde479"/></shape> -->
+
+
+    <item>
+
+
+    <layer-list>
+
+
+    <item>
+
+
+    <shape android:dither="true" android:useLevel="true" android:shape="oval">
+
+    <gradient android:startColor="#63A29E9E" android:endColor="#66DBD1D1" android:angle="90"/>
+
+</shape>
+
+</item>
+
+
+    <item android:right="2dp" android:bottom="2dp">
+
+
+    <shape android:shape="oval">
+
+    <solid android:color="#dde479"/>
+
+</shape>
+
+</item>
+
+</layer-list>
+
+</item>
+
+</selector>

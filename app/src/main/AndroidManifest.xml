@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.lazybones.jkh.jkhwork">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission-group.STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MapActivity"
+            android:label="@string/title_activity_map"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ChatBoxActivity"
+            android:label="@string/title_activity_chat_box"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrderInfoActivity"
+            android:label="@string/title_activity_order_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NotificationActivity"
+            android:label="@string/title_activity_notification"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PaymentActivity"
+            android:label="@string/title_activity_payment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyordersActivity"
+            android:label="@string/title_activity_myorders"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddneworderActivity"
+            android:label="@string/title_activity_addneworder"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainDrawActivity"
+            android:label="@string/title_activity_main_draw"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/splashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignINActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.here.android.maps.appid"
+            android:value="MOpG7bjKSb8qq4YTKEqp" />
+        <meta-data
+            android:name="com.here.android.maps.apptoken"
+            android:value="ARAoJr-oSkMwbsCliinseg" />
+        <meta-data
+            android:name="com.here.android.maps.license.key"
+            android:value="LWjylLG7ThZM4XiNQV+VLXEM67GuseU5YHHDT2I4s8/zvoJcunW4lSmPQ5MRgNRNOJvd2VFe8vcRI1qD4tXU+zgE22BwWorXZFf64/UAJHKtwvYbQVTSCHV2wmq9zLYA/5YpKWecbn0Wzbin1HkiRDSnS7syezSCp6WXUtMxI/BgiY5zOmH8vjbuIMuBlr88thpP7R5Wwlwq6CK6Z2qpqQtqQ8ronOBPj6X6VxYolzIfaJOK9dW/CJEFP1FRi1yzd2nKC+y5giZbq5OyIN64fXuavpeYdC36qC8KWNPO8hquC2Jz43rRrM/3IzOsn3XLbFnehm3GY+SdbETmQfpBjf+1bAwJ+rAS2YFGI/CDBhasj7DBiyVY68ciRONdy4Nc5okUoBzk5Wcq5JmtXoY4YEGSpy1fVTIWNjGE5qCiM6GAMR9ip7qeWGFPsqj9Bjg5q7km62mw/xO/6SOhFr6dWZKprgZlS213a/PpqcoyLp3dqwAv86NT+qD/CvXF7MLKGEWgmfDMPM6+pe/fOqpWxJV5zuhMU+KbWkbqxaD6wiBhJnqViWqeGUf9AqPNFqosWy22MXtXBlmdPekLmh8V+uTyRZS9SxDJULB9T//HmPpH5h1Ndy39Y7KNwzm7oVFWKztE2p7EIzKqmtn/y/nQI9AJY/C3GSmIF9ffzu0BcpE=" />
+
+        <service
+            android:name="com.here.android.mpa.service.MapService"
+            android:exported="false"
+            android:label="MapService">
+            <intent-filter>
+                <action android:name="MapService"></action>
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>
